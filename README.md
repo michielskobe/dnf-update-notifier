@@ -9,6 +9,10 @@ A lightweight Bash script to notify you of available DNF package updates at logi
 - Optional action to open a terminal and run `dnf update`
 - Automatically launches via a `.desktop` autostart entry
 
+## Notification Preview
+![Screenshot of DNF update notification](https://github.com/user-attachments/assets/8851f53f-f020-4da4-9fab-2af1667dcc00)
+
+
 ## Installation
 
 1. **Clone the repository:**
