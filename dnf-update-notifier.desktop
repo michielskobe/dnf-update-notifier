@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec=sh -c '$HOME/dnf-update-notifier.sh'
+Hidden=false
+NoDisplay=True
+X-GNOME-Autostart-enabled=true
+Name=DNF Update Notifier
+Comment=Runs a script to check if DNF updates are available and notify the user
