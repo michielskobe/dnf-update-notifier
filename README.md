@@ -1,6 +1,6 @@
 # DNF Update Notifier
 
-A lightweight Bash script to notify you of available DNF package updates at login on Fedora systems. It integrates with the desktop environment using `notify-send` and allows you to update packages directly via a terminal prompt.
+A lightweight Bash script to notify you of available DNF package updates at a specified interval on Fedora systems. It integrates with the desktop environment using `notify-send` and allows you to update packages directly via a terminal prompt.
 
 ## Features
 
@@ -86,7 +86,7 @@ Updates available          |  System up-to-date        |  Error
 1. Remove the script:
 
    ```bash
-   $ rm /path/to/.dnf-update-notifier.sh
+   $ rm /path/to/dnf-update-notifier.sh
    ```
 
 2. Remove the cron job by editing your crontab and deleting the corresponding line:
