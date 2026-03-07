@@ -4,10 +4,10 @@ A lightweight Bash script to notify you of available DNF package updates at logi
 
 ## Features
 
-- Runs `dnf check-update` silently at login
-- Sends a notification if updates are available
+- Runs `dnf check-update` silently in the background
+- Sends a desktop notification if updates are available
 - Optional action to open a terminal and run `dnf update`
-- Automatically launches via a `.desktop` autostart entry
+- Automatically executed periodically using a cron job.
 - Retry option included in case of update check errors
 - Logs error details for troubleshooting
   
@@ -27,39 +27,70 @@ Updates available          |  System up-to-date        |  Error
    $ git clone https://github.com/michielskobe/dnf-update-notifier.git
    $ cd dnf-update-notifier
    ```
-2. **Copy the script and desktop entry to the correct location:**
+2. **Move the script to the correct location and make it executable:**
 
    ```bash
-   $ cp dnf-update-notifier.sh ~/dnf-update-notifier.sh
-   $ mkdir -p ~/.config/autostart
-   $ cp dnf-update-notifier.desktop ~/.config/autostart/dnf-update-notifier.desktop
-   $ chmod +x ~/dnf-update-notifier.sh
+   $ mv dnf-update-notifier.sh /path/to/dnf-update-notifier.sh
+   $ chmod +x /path/to/dnf-update-notifier.sh
    ```
-3. **Verify the Exec path (optional):**
 
-   The `.desktop` file uses:
-   ```desktop
-   Exec=sh -c '$HOME/dnf-update-notifier.sh'
-   ```
-   This makes it portable across user accounts. No changes needed unless you renamed the script or placed it elsewhere.
+3. **Add a cron job to run the script automatically:**
+
+
+   1. Open your user crontab:
+      ```bash
+      $ crontab -e
+      ```
+
+   2. Add the following line to run the script every minute:
+      ```bash
+      * * * * * /path/to/dnf-update-notifier.sh
+      ```
+   
+   3. Save and exit the editor. The script will now run automatically at the specified interval.
+
+   4. Verify that the cron job was added successfully:
+      ```bash
+      $ crontab -l
+      ```
 
 ## Customizations
-- If you want to use a different terminal emulator, edit the line near the bottom of `~/.dnf-update-notifier.sh`:
+- **Cron interval vs script execution:**
+
+   The example cron job runs the script every minute (every minute of every hour, every day). Inside the script, a check ensures that the update check executes only once every 24 hours. This approach has two advantages:
+
+   1. **No missed checks** - if the system is powered off when a scheduled cron execution would occur, the script will still run the next time the system is on, so updates are never skipped.
+
+   2. **Avoids unnecessary notifications** - even though the cron job may trigger frequently, the script itself enforces the interval, preventing repeated notifications within the same 24-hour period.
+
+   You can adjust the frequency by modifying the `INTERVAL` variable inside `dnf-update-notifier.sh`, allowing you to balance timely update checks with minimal notification noise.
+
+- **Custom terminal emulator:**
+
+   If you want to use a different terminal emulator, edit the line near the bottom of `dnf-update-notifier.sh`:
    ```bash
    ptyxis -- "$SHELL" -c "sudo dnf update; exec $SHELL"
    ```
    Replace `ptyxis` with your preferred terminal command.
 
-- If you want to use a different text editor to inspect the error log, edit the line near the bottom of `~/.dnf-update-notifier.sh`:
+- **Custom text editor for logs:**
+
+   If you want to use a different text editor to inspect the error log, edit the line near the bottom of `dnf-update-notifier.sh`:
    ```bash
-   gnome-text-editor ~/dnf-update-notifier.log
+   gnome-text-editor /path/to/dnf-update-notifier.log
    ```
-   Replace `gnome-text-editor` with your preferred text editor command.
+   Replace `gnome-text-editor` with your preferred editor.
 
 ## Uninstall
 
-To remove the notifier:
-```bash
-$ rm ~/.dnf-update-notifier.sh
-$ rm ~/.config/autostart/dnf-update-notifier.desktop
-```
+1. Remove the script:
+
+   ```bash
+   $ rm /path/to/.dnf-update-notifier.sh
+   ```
+
+2. Remove the cron job by editing your crontab and deleting the corresponding line:
+
+   ```bash
+   $ crontab -e
+   ```
